@@ -1,1 +1,0 @@
-{"success":true,"accessToken":"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzFkNWM5OTg0MjcwMDAxYmUzYzc2MCIsImlhdCI6MTc2OTA2Nzk3NywiZXhwIjoxNzY5MDY5MTc3fQ.qDpVj1TXrNW3tPLLW6KqW_sk7NlC-Eh-rsLCsyGdb-w","refreshToken":"6b3431cafaec7ad85784881a6b527d374268363f3c1e765988647b99caa8c62b1356f99133620db4","user":{"email":"vova_8027f174c8@test.ru","name":"Vova_8027f174c8"}}

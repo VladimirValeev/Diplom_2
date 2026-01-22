@@ -1,1 +1,0 @@
-{"success":true,"user":{"email":"vova_9a7d590f6e@test.ru","name":"Vova_9a7d590f6e"},"accessToken":"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NzFkNWJmOTg0MjcwMDAxYmUzYzc1MiIsImlhdCI6MTc2OTA2Nzk2NywiZXhwIjoxNzY5MDY5MTY3fQ.L8jqxcG9lpXtFiMtIXm4ecZ3bqFqaBH30HMefOz4Qtw","refreshToken":"d14724fb6bb5c21db425ec2e0243d082c3499cacd41c96ae144910d5be2a3f3f13d2d2f2d33edc8c"}
