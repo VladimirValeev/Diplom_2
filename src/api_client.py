@@ -1,16 +1,12 @@
 import allure
 import requests
 
-from .endpoints import BASE_URL
-
 
 class ApiClient:
     def __init__(self):
         self.session = requests.Session()
 
-    @allure.step("HTTP {method} {path}")
-    def request(self, method: str, path: str, *, headers=None, json=None):
-        url = BASE_URL + path
+    def request(self, method: str, url: str, *, headers=None, json=None):
         resp = self.session.request(method, url, headers=headers, json=json)
 
         # полезные вложения в Allure

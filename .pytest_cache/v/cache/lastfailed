@@ -1,0 +1,4 @@
+{
+  "tests/test_orders.py::TestOrders::test_create_order_without_auth_returns_401": true,
+  "tests/test_orders.py::TestOrders::test_create_order_with_invalid_ingredient_hash_returns_500": true
+}

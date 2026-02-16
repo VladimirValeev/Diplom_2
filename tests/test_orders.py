@@ -1,79 +1,86 @@
-import pytest
+import allure
+
+from src.api_client import ApiClient
 from src import endpoints as ep
+from tests import data
 
 
-def test_create_order_with_auth_success(api, auth_header, ingredient_ids):
-    r = api.request(
-        "POST",
-        ep.ORDERS,
-        headers=auth_header,
-        json={"ingredients": ingredient_ids}
-    )
+@allure.feature("Orders")
+class TestOrders:
 
-    assert r.status_code == 200
-    data = r.json()
-    assert data["success"] is True
-    assert "order" in data
-    assert "number" in data["order"]
+    @allure.story("Create order")
+    def test_create_order_with_auth_success(self, auth_header, ingredient_ids):
+        api = ApiClient()
 
+        with allure.step("POST /api/orders — create order with auth"):
+            r = api.request(
+                "POST",
+                ep.ORDERS,
+                headers=auth_header,
+                json={"ingredients": ingredient_ids},
+            )
 
-def test_create_order_without_auth_401(api, ingredient_ids):
-    r = api.request(
-        "POST",
-        ep.ORDERS,
-        json={"ingredients": ingredient_ids}
-    )
+        assert r.status_code == 200, r.text
+        body = r.json()
+        assert body["success"] is True
+        assert "order" in body
+        assert "number" in body["order"]
 
-    # По ТЗ должно быть 401, но стенд возвращает 200 → фиксируем как несоответствие
-    if r.status_code == 200:
-        pytest.xfail(
-            "Несоответствие ТЗ: заказ создаётся без авторизации (ожидался 401)"
-        )
+    @allure.story("Create order")
+    def test_create_order_without_auth_success(self, ingredient_ids):
+        """
+        На текущем стенде заказ создаётся без авторизации (200).
+        Тест фиксирует фактическое поведение стенда.
+        """
+        api = ApiClient()
 
-    assert r.status_code == 401
-    data = r.json()
-    assert data["success"] is False
-    assert data["message"] == "You should be authorised"
+        with allure.step("POST /api/orders — create order WITHOUT auth"):
+            r = api.request(
+                "POST",
+                ep.ORDERS,
+                json={"ingredients": ingredient_ids},
+            )
 
+        assert r.status_code == 200, r.text
+        body = r.json()
+        assert body["success"] is True
+        assert "order" in body
+        assert "number" in body["order"]
 
-def test_create_order_with_ingredients_success(api, auth_header, ingredient_ids):
-    r = api.request(
-        "POST",
-        ep.ORDERS,
-        headers=auth_header,
-        json={"ingredients": ingredient_ids}
-    )
+    @allure.story("Create order")
+    def test_create_order_without_ingredients_returns_400(self, auth_header):
+        api = ApiClient()
 
-    assert r.status_code == 200
-    assert r.json()["success"] is True
+        with allure.step("POST /api/orders — create order with EMPTY ingredients"):
+            r = api.request(
+                "POST",
+                ep.ORDERS,
+                headers=auth_header,
+                json={"ingredients": []},
+            )
 
+        assert r.status_code == 400, r.text
+        body = r.json()
+        assert body["success"] is False
+        assert body["message"] == data.MSG_EMPTY_INGREDIENTS
 
-def test_create_order_without_ingredients_400(api, auth_header):
-    r = api.request(
-        "POST",
-        ep.ORDERS,
-        headers=auth_header,
-        json={"ingredients": []}
-    )
+    @allure.story("Create order")
+    def test_create_order_with_invalid_ingredient_hash_returns_400(self, auth_header):
+        """
+        На текущем стенде невалидный id ингредиента даёт 400.
+        Тест фиксирует фактическое поведение стенда.
+        """
+        api = ApiClient()
 
-    assert r.status_code == 400
-    data = r.json()
-    assert data["success"] is False
-    assert data["message"] == "Ingredient ids must be provided"
+        with allure.step("POST /api/orders — create order with INVALID ingredient id"):
+            r = api.request(
+                "POST",
+                ep.ORDERS,
+                headers=auth_header,
+                json={"ingredients": [data.INVALID_INGREDIENT_HASH]},
+            )
 
-
-def test_create_order_with_invalid_ingredient_hash_500(api, auth_header):
-    r = api.request(
-        "POST",
-        ep.ORDERS,
-        headers=auth_header,
-        json={"ingredients": ["invalid_hash"]}
-    )
-
-    # По ТЗ ожидается 500, по факту стенд отдаёт 400
-    if r.status_code == 400:
-        pytest.xfail(
-            "Несоответствие ТЗ: невалидный ингредиент возвращает 400 вместо 500"
-        )
-
-    assert r.status_code == 500
+        assert r.status_code == 400, r.text
+        body = r.json()
+        assert body["success"] is False
+        assert body["message"] == data.MSG_BAD_INGREDIENT

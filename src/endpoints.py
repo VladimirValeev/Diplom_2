@@ -1,6 +1,6 @@
-BASE_URL = "https://stellarburgers.education-services.ru"
+MAIN_SITE = "https://stellarburgers.education-services.ru"
 
-INGREDIENTS = "/api/ingredients"
-REGISTER = "/api/auth/register"
-LOGIN = "/api/auth/login"
-ORDERS = "/api/orders"
+INGREDIENTS = f"{MAIN_SITE}/api/ingredients"
+REGISTER = f"{MAIN_SITE}/api/auth/register"
+LOGIN = f"{MAIN_SITE}/api/auth/login"
+ORDERS = f"{MAIN_SITE}/api/orders"
